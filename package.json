@@ -1,17 +1,38 @@
 {
-  "name": "grunt-task-runner",
-  "version": "0.0.1",
-  "dependencies": {
-    "browserslist": "^2.11.3",
-    "font-awesome": "^4.7.0",
-    "grunt": "^1.0.1"
+  "name": "Budget-Helper-2",
+  "version": "1.0.0",
+  "description": "### Purpose of this project",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zimann/Budget-Helper-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zimann/Budget-Helper-2/issues"
+  },
+  "homepage": "https://github.com/Zimann/Budget-Helper-2#readme",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.9",
+    "style-loader": "^0.20.1",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^2.1.4"
+  },
+  "dependencies": {
     "grunt-autoprefixer": "^3.0.4",
-    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-cssmin": "^2.2.1",
-    "grunt-contrib-imagemin": "^2.0.1",
-    "grunt-contrib-uglify": "^3.3.0",
-    "grunt-postcss": "^0.9.0"
+    "grunt-npm-install": "^0.3.1",
+    "jquery": "^3.3.1",
+    "webpack-concat-plugin": "^2.4.2"
   }
 }

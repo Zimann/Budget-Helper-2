@@ -7,6 +7,7 @@ body, html {
     margin:0;
     background-color: #e9eef2;
     color: #afafaf;
+    /* background-color:red; */
 }
 
 .clearfix::after {
@@ -65,15 +66,12 @@ header {
 .income-header-field, .expenses-header-field {
     /*position: relative;*/
     /*text-align: left;*/
-    display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
-    -webkit-box-pack:justify;
-        -ms-flex-pack:justify;
-            justify-content:space-between;
-    -webkit-box-align:center;
-        -ms-flex-align:center;
-            align-items:center;
+    -ms-flex-pack:justify;
+        justify-content:space-between;
+    -ms-flex-align:center;
+        align-items:center;
     width: 35%;
     margin-left: 35%;
     margin-top: 20px;
@@ -162,7 +160,6 @@ main {
 
 #inputs{
     display:-ms-inline-flexbox;
-    display:-webkit-inline-box;
     display:inline-flex;
     padding-top: 40px;
 }
@@ -273,7 +270,6 @@ input[type="number"] {
     /*display:inline-flex;*/
     /*-ms-flex-wrap: wrap;*/
         /*flex-wrap: wrap;*/
-    display:-webkit-box;
     display:-ms-flexbox;
     display:flex;
     -ms-flex-pack: distribute;
@@ -353,7 +349,6 @@ hr {
 .income-value, .expenses-value {
     transition: .3s linear;
     display:-ms-inline-flexbox;
-    display:-webkit-inline-box;
     display:inline-flex;
 }
 

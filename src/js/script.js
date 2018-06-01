@@ -1,8 +1,10 @@
-$(document).ready(function(){
+import $ from 'jquery';
 
+$(document).ready(function(){
 //variable caching
+   
     var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    var date = new Date();
+    const date = new Date();   
     var monthNumber = date.getMonth();
     var currentMonth = monthNames[monthNumber];
     var errorMessage = $('.error-message');
@@ -19,7 +21,7 @@ $(document).ready(function(){
     var expensesValue = 0;
     var getValue;
     var detectMathSign = '+';
-    var totalSum = 0;
+    var totalSum = 0;  
     var financePercentage;
     var expensePercentage = $('.percentage-expense-header');
     var expensePercentageReference;
