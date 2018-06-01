@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/all.css">
+    <link rel ="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Budget Planning</title>
+</head>
+<body>
+<header>
+    <h1 id="app_title"> Available Budget in: </h1>
+    <div class="total-title">Total</div>
+    <div id="total_budget"></div>
+    <div class="income-header-field">
+        <span class="income-header-title">Income</span>
+        <span class="income-header-value">0</span>
+    </div>
+    <div class="expenses-header-field">
+        <span class="expenses-header-title">Expenses</span>
+        <span class="expenses-header-value">0</span>
+        <span class="percentage-expense-header"></span>
+    </div>
+</header>
+<main>
+    <div id="inputs">
+        <i class="fa fa-arrows-v arrows"></i>
+        <select class="option">
+            <option selected="selected">+</option>
+            <option>-</option>
+        </select>
+        <input type="text" class="description" placeholder="Add description">
+        <input type="number" class="value" placeholder="Value">
+        <i class="fa fa-check-circle-o add-value"></i>
+    </div>
+    <div class="error-message">
+    </div>
+    <div id ="main_display">
+        <div class="income-col">
+            <h3 class="col-title col-title-income">Income</h3>
+            <hr>
+        </div>
+        <div class="expense-col">
+            <h3 class="col-title col-title-expenses">Expenses</h3>
+            <hr>
+        </div>
+    </div>
+</main>
+<script src="dist/js/all.js"></script>
+</body>
+</html>

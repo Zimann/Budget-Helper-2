@@ -1,0 +1,345 @@
+body, html {
+    font-family: 'Lato', sans-serif;
+    box-sizing: border-box;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    margin:0;
+    background-color: #e9eef2;
+    color: #afafaf;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/*-----General purpose colors-----
+
+blue : #19B5FE;
+orange: #dc5f45;
+
+--------------------------------*/
+
+header {
+    text-align: center;
+    height: 450px;
+    width: 100%;
+    
+    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('../../img/jeremy-cai-1169-min.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: bottom;
+}
+
+#app_title {
+    color: #fff;
+    margin:0;
+    padding-top: 50px;
+}
+
+#total_budget {
+    color: #fff;
+    font-weight: bold;
+    font-size: 28px;
+    padding-top: 40px;
+}
+
+.income-header-field, .expenses-header-field {
+    position: relative;
+    text-align: left;
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 20px;
+    padding-top: 20px;
+        padding-bottom: 40px;
+    border-radius: 10px;
+    color: #4b4b4b;
+}
+
+.expenses-header-field{
+    background-color:#dc5f45;
+}
+
+.income-header-field{
+
+    background-color: #19B5FE;
+}
+
+.income-header-title , .expenses-header-title {
+    font-weight: bold;
+    float:left;
+    padding-left: 20px;
+}
+
+.income-header-value, .expenses-header-value {
+        float:right;
+/*    width:30%;*/
+    margin-right: 60px;
+    padding-right: 20px;
+    color:#fff;
+    font-weight: bold;
+    font-size: 21px;
+    margin-top: -4px;
+}
+
+.percentage-expense-header {
+
+    clear:both;
+    float:right;
+    background-color:#ff8538;
+    color: #fff;
+    padding:3px;
+    margin-top:-24px;
+    margin-right: 3%;
+    visibility: hidden;
+}
+
+.percentage-main {
+    position: absolute;
+    right: 13.5%;
+    padding: 4px;
+    background-color: rgba(255,0,0,0.21);
+    color: #dc5f45;
+    font-size: 11px;
+    visibility: hidden;
+}
+
+.padding-set{
+    padding-right: 11%;
+}
+
+main {
+    text-align: center;
+}
+
+#inputs{
+    display:-ms-inline-flexbox;
+    display:inline-flex;
+    padding-top: 40px;
+}
+
+.option {
+    width:15%;
+    margin-right: 1%;
+    cursor: pointer;
+}
+
+.description, .value, .option {
+    padding: 15px;
+    border: 1px solid #dbdada;
+            outline: none;
+        font-family: 'Lato', sans-serif;
+    font-weight: bold;
+        color: grey;
+    border-radius: 10px;
+}
+
+.description {
+    width:60%;
+}
+
+.arrows:before{
+    font-size: 18px;
+    color: grey;
+}
+
+.arrows {
+    position:absolute;
+    z-index: 1;
+    margin-left:3.2%;
+    margin-top: 15px;;
+}
+
+.value {
+    width: 15%;
+    margin-left:2%;
+}
+
+.error-message {
+    color: red;
+      width: 50%;
+    margin-left:42%;
+display: none;
+}
+
+select {
+    appearance:none;
+-webkit-appearance:none; /* chrome and safari */
+-moz-appearance:none; /* Mozilla */
+-ms-appearance:none; /* Internet explorer */
+}
+
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  font-family: 'Lato', sans-serif;
+    font-weight: bold;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  font-family: 'Lato', sans-serif;
+        font-weight: bold;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  font-family: 'Lato', sans-serif;
+        font-weight: bold;
+}
+:-moz-placeholder { /* Firefox 18- */
+  font-family: 'Lato', sans-serif;
+        font-weight: bold;
+}
+
+
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+.add-value:before {
+    font-size: 40px;
+    font-weight: 100;
+    color: #19B5FE;
+}
+
+.add-value {
+    padding-left: 3%;
+    padding-top: 5px;
+}
+
+.add-value:hover {
+    cursor: pointer;
+}
+
+#main_display {
+    display:-ms-inline-flexbox;
+    display:inline-flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    text-align: center;
+    background-color: #fff;
+    width: 100%;
+    border-top: 1px solid #dbdada;
+    margin-top: 25px;
+    margin-bottom: 100px;
+    padding-bottom: 50px;
+    box-shadow: 3px 7px 36px -8px rgba(0,0,0,0.49);
+}
+
+hr {
+    margin: 0;
+}
+
+.col-title {
+    float:left;
+    padding-top: 20px;
+    padding-bottom:2px;
+    text-transform: uppercase;
+}
+
+.col-title-income {
+    color: #19B5FE;
+}
+
+.col-title-expenses {
+    color: #dc5f45;
+}
+
+.income-col {
+    font-weight: bold;
+    padding-left: 15%;
+    width: 35%;
+    font-family: inherit;
+}
+
+.income-field, .expenses-field {
+    cursor:pointer;
+    padding-top: 15px;
+    padding-bottom: 17px;
+    transition: .3s linear;
+}
+
+.income-field {
+    padding-bottom: 19px;
+}
+
+.income-field:hover, .expenses-field:hover {
+    background-color:#ededed;
+}
+
+.income-description, .expenses-description {
+    float:left;
+    padding-left: 7px;
+}
+
+
+.income-value {
+        float:right;
+        color:#19B5FE;
+}
+
+.income-value span {
+    transition: .3s linear;
+    padding-right: 20px;
+}
+
+.expenses-value {
+    color: #dc5f45;
+    padding-right: 60px;
+}
+
+.income-value, .expenses-value {
+    transition: .3s linear;
+    display:-ms-inline-flexbox;
+    display:inline-flex;
+}
+
+.expense-value-wrapper, .income-value-wrapper {
+    text-align: right;
+}
+
+.expense-col {
+        font-weight: bold;
+    width: 35%;
+    padding-left: 5%;
+}
+
+.margin-class {
+    margin-left: 11%;
+}
+
+.padding-class-expense {
+    padding-right: 80px;
+}
+
+.padding-class-income {
+    padding-right: 30px !important;
+}
+
+.circle-orange, .circle-blue {
+    padding-right: 3%;
+    cursor:pointer;
+}
+
+
+.circle-orange:before {
+    font-size:20px;
+    color: #dc5f45;
+}
+
+.circle-blue:before {
+    font-size:20px;
+    color: #19B5FE;
+    padding-right: 3px;
+}
+
+
+hr {
+    width: 100%;
+    border-top: 1px solid rgba(159, 159, 159, 0.29);
+}
