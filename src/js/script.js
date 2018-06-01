@@ -1,96 +1,215 @@
 import $ from 'jquery';
 
 $(document).ready(function(){
-//variable caching
+    //variable caching
+    // const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    // const date = new Date();   
+    // const monthNumber = date.getMonth();
+    // const currentMonth = monthNames[monthNumber];
+    // const errorMessage = $('.error-message');
+    // const option = $('.option');
+    const totalBudget = $('#total_budget');
+    const value = $('.value');
+    const addValue = $('.add-value');
+    const totalIncome = $('.income-header-value');
+    const totalExpense = $('.expenses-header-value');
+    const incomeColumn = $('.income-col hr');
+    const expenseColumn = $('.expense-col hr');
+    const totalTitle = $('.total-title');
+    let incomeValue = 0;
+    let expensesValue = 0;
+    let getValue;
+    let detectMathSign = '+';
+    let totalSum = 0;  
+    let financePercentage;
+    const expensePercentage = $('.percentage-expense-header');
+    let expensePercentageReference;
+    const description = $('.description');
+    const appTitle = $('#app_title');
+    let fieldIncomeValue;
+    let fieldExpenseValue;
+    let addedElementTrigger = false;
+    let addedElementTriggerExpense = false;
+    let getDescription;
+    let expenseHtmlField;
+    let individualExpenseValue;
+    let individualExpensePercentage;
+    let individualPercentageContainer;
+    let individualValueType;
+    let individualPercentageType;
+    let percentageTypeReference;
+    
+    
+    //make the properties of an object readOnly
+    // -----------------------------------------------------------
+    const privateMethod1 = Symbol();
+    class PageSetup {
+        constructor(objectToLooOver){
+            this[privateMethod1] = () => {
+                for(const key in objectToLooOver) {
+                    if(objectToLooOver.hasOwnProperty(key))
+                    Object.defineProperty(objectToLooOver, key, {
+                        writable: false
+                    });
+                }
+            };
+        }
+    };
+    // ----------------------------------------------------
+    
+    const DOMSelectionAndInput = {
+        monthNames : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        errorMessage: $('.error-message'),
+        option: $('.option'),
+        totalBudget: $('#total_budget'),
+        totalExpense: $('.expenses-header-value'),
+        incomeColumn: $('.income-col hr'),
+        value: $('.value'),
+        expenseColumn: $('.expense-col hr'),
+        totalTitle: $('.total-title'),
+        expensePercentage: $('.percentage-expense-header'),
+        description: $('.description'),
+        appTitle: $('#app_title'), 
+        addValue: $('.add-value'),
+        detectMathSign: '+',
+        displayMonth: function(){
+            let monthNumber = new Date().getMonth();
+            let currentMonth = this.monthNames[monthNumber];            
+            this.appTitle.append(currentMonth);
+            this.description.focus();
+        },
+        inputEventsHandling : function(){
+            
+            let self = this;
+            
+            //handle the keypresses and error message display when pressing 'up' 'down' and 'minus' sign
+            this.value.keydown(function(e) {
+                //hide the message when typing other numbers
+                if (self.errorMessage.css('display') !== 'none') {
+                    self.errorMessage.toggle();
+                }
+                //display the message when pressing "up", "down" arrows or "-" and "+" symbols
+                if (e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 189 || e.keyCode === 43) {
+                    self.errorMessage.html('<h3>No arrows, <strong>"-"</strong> or <strong>"+"</strong> symbols allowed</h3>');
+                    self.errorMessage.toggle();
+                    return false;
+                }
+                
+                //disable the only key (E) that could be visible inside the number field
+                if(e.keyCode === 69) {
+                    return false;
+                }
+            });
+            
+            self.description.keydown(function(e) {
+                if (self.errorMessage.css('display') !== 'none') {
+                    self.errorMessage.toggle();
+                }
+            });
+            
+            //handle the keypress for the 'shift' and 'plus' sign
+            self.value.keypress(function(e) {
+                if (e.keyCode === 43) {
+                    self.errorMessage.toggle();
+                    return false;
+                }
+            });
+
+            //detect select change for the addition or subtraction and set a value for the 'detectMathSign' variable
+            self.option.change(function() {
+                if ($(self).val() === '-') {
+                    self.detectMathSign = '-';
+                } else {
+                    self.detectMathSign = '+';
+                }
+            });
+            
+            $(window).keypress(function(e){
+                if(e.keyCode === 13){
+                    self.description.focus();
+                    valueProcessing();
+                }
+            });
+        }        
+    };
+
+    
+    const readOnlyProps = new PageSetup(DOMSelectionAndInput);
+    readOnlyProps[privateMethod1]();
+    // -----------------------------------------------------------
+
+    // const q = new PageSetup();
+    // q[privateMethod1]();
+
+    
+    //make the properties of an object read-only
+    // const setReadOnlyProps = (objectToLooOver) => {
+    //     for(let key in objectToLooOver) {
+    //         if(objectToLooOver.hasOwnProperty(key))
+    //         Object.defineProperty(objectToLooOver, key, {
+    //             writable: false
+    //         });
+    //     }
+    // };
+
+    // setReadOnlyProps(DOMSelectionAndInput);
+
+    // const incomeObject = {
+    //     incomeValue : 0,
+    //     fieldIncomeValue: '',
+    //     addedElementTrigger: false
+    // };
+
+    // const expenseObject = {
+    //     expensesValue: 0,
+    //     fieldExpenseValue : '',
+    //     expensePercentageReference: '',
+    //     addedElementTriggerExpense: false,
+    //     expenseHtmlField: '',
+    //     individualExpenseValue: '',
+    //     individualExpensePercentage: '',
+
+    // };
+
+    class OperationsClass {
+        //this class wil only get methods on the prototype ; this is the parent class
+
+        computePercentages(){}
+    }
+
+    console.log(new OperationsClass());
+
+    class IncomeObject extends OperationsClass {
    
-    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const date = new Date();   
-    var monthNumber = date.getMonth();
-    var currentMonth = monthNames[monthNumber];
-    var errorMessage = $('.error-message');
-    var option = $('.option');
-    var totalBudget = $('#total_budget');
-    var value = $('.value');
-    var addValue = $('.add-value');
-    var totalIncome = $('.income-header-value');
-    var totalExpense = $('.expenses-header-value');
-    var incomeColumn = $('.income-col hr');
-    var expenseColumn = $('.expense-col hr');
-    var totalTitle = $('.total-title');
-    var incomeValue = 0;
-    var expensesValue = 0;
-    var getValue;
-    var detectMathSign = '+';
-    var totalSum = 0;  
-    var financePercentage;
-    var expensePercentage = $('.percentage-expense-header');
-    var expensePercentageReference;
-    var description = $('.description');
-    var appTitle = $('#app_title');
-    var fieldIncomeValue;
-    var fieldExpenseValue;
-    var addedElementTrigger = false;
-    var addedElementTriggerExpense = false;
-    var getDescription;
-    var expenseHtmlField;
-    var individualExpenseValue;
-    var individualExpensePercentage;
-    var individualPercentageContainer;
-    var individualValueType;
-    var individualPercentageType;
-    var percentageTypeReference;
+    }
 
-    description.focus();
-    appTitle.append(currentMonth);
+    class ExpenseObject extends OperationsClass {
 
-//handle the keypresses and error message display when pressing 'up' 'down' and 'minus' sign
-    value.keydown(function(e) {
-        //hide the message when typing other numbers
-        if (errorMessage.css('display') !== 'none') {
-            errorMessage.toggle();
-        }
-        //display the message when pressing "up", "down" arrows or "-" and "+" symbols
-        if (e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 189 || e.keyCode === 43) {
-            errorMessage.html('<h3>No arrows, <strong>"-"</strong> or <strong>"+"</strong> symbols allowed</h3>');
-            errorMessage.toggle();
-            return false;
-        }
+    }
 
-        //disable the only key (E) that could be visible inside the number field
-        if(e.keyCode === 69) {
-            return false;
+    const mathOperationsObject = {
+        getValue: DOMSelectionAndInput.value.val(),
+        totalSum : 0,
+        financePercentage: '',
+        getDescription: '',
+        individualPercentageContainer: '',
+        individualPercentageType: '',
+        addValueEvent: function(){
+            DOMSelectionAndInput.addValue.click(this.valueProcessing);
+        },
+        valueProcessing: function(){
+            let self = this;
+            var getValue = DOMSelectionAndInput.value.val();
+            DOMSelectionAndInput.totalTitle.addClass('full-opacity');
+            console.log(getValue);
         }
-    });
+    };
 
-    description.keydown(function(e) {
-        if (errorMessage.css('display') !== 'none') {
-            errorMessage.toggle();
-        }
-    })
+    DOMSelectionAndInput.displayMonth();
+    DOMSelectionAndInput.inputEventsHandling();
+    mathOperationsObject.addValueEvent();
+   
 
-//handle the keypress for the 'shift' and 'plus' sign
-    value.keypress(function(e) {
-        if (e.keyCode === 43) {
-            errorMessage.toggle();
-            return false;
-        }
-    });
-
-//detect select change for the addition or subtraction and set a value for the 'detectMathSign' variable
-    option.change(function() {
-        if ($(this).val() === '-') {
-            detectMathSign = '-';
-        } else {
-            detectMathSign = '+';
-        }
-    });
-
-    $(window).keypress(function(e){
-        if(e.keyCode === 13){
-            description.focus();
-            valueProcessing();
-        }
-    })
 
 //register the values and start segmenting after a click or after a carriage return (Enter)
     addValue.click(valueProcessing);
@@ -257,6 +376,7 @@ $(document).ready(function(){
         } else {
             expensePercentage.removeClass('full-opacity');
         }
+        
     }
 
     function sectionRemovalUpdates(valueType, referenceElement){
@@ -278,6 +398,7 @@ $(document).ready(function(){
             //subtract the section value from the "total" value
             totalSum -= fieldIncomeValue;
             totalBudget.html(totalSum);
+            
 
             if(expensePercentageReference > 0) {
                 expensePercentage.addClass('full-opacity');
@@ -309,7 +430,7 @@ $(document).ready(function(){
             individualValueType = $(this).find('.income-value');
 
             individualValueType = individualValueType.text().toString().split(' ')[1];
-            console.log(individualValueType);
+            // console.log(individualValueType);
 
             individualPercentageContainer = $(this).find('.percentage-income');
             individualPercentageContainer.toggleClass('full-opacity');
@@ -331,38 +452,6 @@ $(document).ready(function(){
 
     function displayPercentageExpense(){
 
-        // section.eq(0).hover(function(){
-            // reset variables
-            // individualValueType = '';
-            // individualPercentageContainer = '';
-            // individualPercentageType='';
-            // percentageTypeReference='';
-
-        //     individualValueType = contextReference.find(valueType);
-        //     individualValueType = individualValueType.text().toString().split(' ')[1];
-        //     console.log(individualValueType);
-        //
-        //     // console.log(20);
-        //
-        //     individualPercentageContainer = contextReference.find(percentageType);
-        //     individualPercentageContainer.toggleClass('full-opacity');
-        //
-        //     individualPercentageType = (individualValueType/storedValue * 100).toFixed(2);
-        //     percentageTypeReference = individualPercentageType;
-        //
-        //     //hide the percentage if this is bigger than 100
-        //
-        //     //only applies to expenses
-        //     if(valueType === '.expense-value'){
-        //         if(individualPercentageType > 100){
-        //             individualPercentageContainer.toggleClass('full-opacity');
-        //         } else {
-        //             individualPercentageType += '%';
-        //         }
-        //     }
-        //
-        //     individualPercentageContainer.html(individualPercentageType);
-        // })
 
         $('.section-wrapper-2').eq(0).hover(function(){
 
@@ -390,10 +479,6 @@ $(document).ready(function(){
             individualPercentageContainer.html(individualPercentageType)
         });
     }
-
-
-
-
 
     function removeSectionWrapper(referenceElement, wrapperSection){
         referenceElement.closest(wrapperSection).remove();
