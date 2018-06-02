@@ -6,8 +6,8 @@ $(document).ready(function(){
     // const date = new Date();   
     // const monthNumber = date.getMonth();
     // const currentMonth = monthNames[monthNumber];
-    // const errorMessage = $('.error-message');
-    // const option = $('.option');
+    const errorMessage = $('.error-message');
+    const option = $('.option');
     const totalBudget = $('#total_budget');
     const value = $('.value');
     const addValue = $('.add-value');
@@ -40,21 +40,6 @@ $(document).ready(function(){
     let percentageTypeReference;
     
     
-    //make the properties of an object readOnly
-    // -----------------------------------------------------------
-    const privateMethod1 = Symbol();
-    class PageSetup {
-        constructor(objectToLooOver){
-            this[privateMethod1] = () => {
-                for(const key in objectToLooOver) {
-                    if(objectToLooOver.hasOwnProperty(key))
-                    Object.defineProperty(objectToLooOver, key, {
-                        writable: false
-                    });
-                }
-            };
-        }
-    };
     // ----------------------------------------------------
     
     const DOMSelectionAndInput = {
@@ -71,13 +56,6 @@ $(document).ready(function(){
         description: $('.description'),
         appTitle: $('#app_title'), 
         addValue: $('.add-value'),
-        detectMathSign: '+',
-        displayMonth: function(){
-            let monthNumber = new Date().getMonth();
-            let currentMonth = this.monthNames[monthNumber];            
-            this.appTitle.append(currentMonth);
-            this.description.focus();
-        },
         inputEventsHandling : function(){
             
             let self = this;
@@ -114,13 +92,16 @@ $(document).ready(function(){
                     return false;
                 }
             });
-
+            
             //detect select change for the addition or subtraction and set a value for the 'detectMathSign' variable
             self.option.change(function() {
-                if ($(self).val() === '-') {
-                    self.detectMathSign = '-';
-                } else {
-                    self.detectMathSign = '+';
+                if ($(this).val() === '-') {
+                    detectMathSign = '-';   
+                    console.log(detectMathSign);                 
+                } 
+                else {
+                    detectMathSign = '+';
+                    console.log(detectMathSign);
                 }
             });
             
@@ -132,52 +113,116 @@ $(document).ready(function(){
             });
         }        
     };
-
     
-    const readOnlyProps = new PageSetup(DOMSelectionAndInput);
-    readOnlyProps[privateMethod1]();
+    //make the properties of an object readOnly
     // -----------------------------------------------------------
-
-    // const q = new PageSetup();
-    // q[privateMethod1]();
-
+    const privateMethod1 = Symbol();
+    class PageSetup {
+        constructor(objectToLooOver){
+            this[privateMethod1] = () => {
+                for(const key in objectToLooOver) {
+                    if(objectToLooOver.hasOwnProperty(key))
+                    Object.defineProperty(objectToLooOver, key, {
+                        writable: false
+                    });
+                }
+            };
+        }
+        displayMonth() {
+            let monthNumber = new Date().getMonth();
+            let currentMonth = DOMSelectionAndInput.monthNames[monthNumber];            
+            DOMSelectionAndInput.appTitle.append(currentMonth);
+            DOMSelectionAndInput.description.focus();
+        }
+    };
     
-    //make the properties of an object read-only
-    // const setReadOnlyProps = (objectToLooOver) => {
-    //     for(let key in objectToLooOver) {
-    //         if(objectToLooOver.hasOwnProperty(key))
-    //         Object.defineProperty(objectToLooOver, key, {
-    //             writable: false
-    //         });
-    //     }
-    // };
+    const setupPage = new PageSetup(DOMSelectionAndInput);
+    setupPage[privateMethod1]();
+    setupPage.displayMonth();
 
-    // setReadOnlyProps(DOMSelectionAndInput);
-
-    // const incomeObject = {
-    //     incomeValue : 0,
-    //     fieldIncomeValue: '',
-    //     addedElementTrigger: false
-    // };
-
-    // const expenseObject = {
-    //     expensesValue: 0,
-    //     fieldExpenseValue : '',
-    //     expensePercentageReference: '',
-    //     addedElementTriggerExpense: false,
-    //     expenseHtmlField: '',
-    //     individualExpenseValue: '',
-    //     individualExpensePercentage: '',
-
-    // };
-
+    //this class wil only get methods on the prototype ; this is the parent class
     class OperationsClass {
-        //this class wil only get methods on the prototype ; this is the parent class
+        constructor(entryType){
+            this.getValue = DOMSelectionAndInput.value.val();
+            this.getDescription = DOMSelectionAndInput.description.val();
+            this.detectMathSign = '+';
+        }
 
-        computePercentages(){}
+        valueProcessing(){
+            DOMSelectionAndInput.totalTitle.addClass('full-opacity');
+
+            //display an error if the description and value field are left empty
+        if (this.getValue == '' || this.getDescription == '') {
+            DOMSelectionAndInput.errorMessage.html('<h3>Please type in a value and a description</h3>');
+            DOMSelectionAndInput.errorMessage.toggle();
+
+            //focus on the field that needs to be completed if left empty
+            if (DOMSelectionAndInput.description.val() == '') {
+                DOMSelectionAndInput.description.focus();
+            } else if (DOMSelectionAndInput.value.val() == '') {
+                DOMSelectionAndInput.value.focus();
+            }
+            return;
+        }
+        this.getValue = parseInt(this.getValue);
+
+        //handle the income sum
+        if (this.detectMathSign === '+') {
+            console.log('here');
+            // incomeValue += getValue;
+            // totalSum += getValue;
+            // totalBudget.html('');
+            // totalIncome.html('');
+            // totalBudget.prepend('<span class="total-sum">' + totalSum + '<span>');
+            // totalIncome.prepend('+ '+ incomeValue);
+
+            // //insert the html for the section in the column
+            // incomeColumn.after('<div class="section-wrapper-1"><div class="income-field"><div class="income-description">' + getDescription + '</div><div class="income-value-wrapper clearfix"><div class="income-value"><span class="plus-sign"></span><span>+ ' + getValue + '</span></div><div class="percentage-income">10%</div><i class="fa fa-times-circle-o circle-blue" aria-hidden="true"></i></div></div><hr></div>');
+
+
+            // //reveal the section smoothly
+            // setTimeout(function(){
+            //     $('.section-wrapper-1').addClass('full-opacity');
+            // },100)
+
+
+            // //remove the income section when clicking on its corresponding "X" button and update the values from the header field and the total budget number
+            // $('.circle-blue').click(function(){
+
+            //     if(addedElementTrigger) {
+            //         return;
+            //     } else {
+
+            //         addedElementTrigger = true;
+
+            //         sectionRemovalUpdates('income', $(this));
+
+            //         //remove the income section
+            //         removeSectionWrapper($(this), '.section-wrapper-1');
+
+            //     };
+
+            //     //set a Timeout to change the trigger's value.
+            //     //This is used to stop the function from running multiple times
+            //     //a forEach, a regular loop or a function factory method will not work due to the dynamic html element insertion
+            //     setTimeout(function(){
+            //         addedElementTrigger = false;
+            //     },100)
+
+            //     updateMainPercentage();
+            // });
+
+            // updateMainPercentage();
+
+            // applyPadding($('.section-wrapper-1'),$('.income-value span'), 'padding-class');
+
+            // displayPercentageIncome();
+        }
+        }
     }
 
-    console.log(new OperationsClass());
+    // const operations = new OperationsClass();
+    // operations.displayMonth();
 
     class IncomeObject extends OperationsClass {
    
@@ -192,22 +237,23 @@ $(document).ready(function(){
         totalSum : 0,
         financePercentage: '',
         getDescription: '',
+        detectMathSign: '+',        
         individualPercentageContainer: '',
         individualPercentageType: '',
-        addValueEvent: function(){
-            DOMSelectionAndInput.addValue.click(this.valueProcessing);
+        bindEvents: function(){
+            // DOMSelectionAndInput.addValue.click(this.valueProcessing);
         },
-        valueProcessing: function(){
-            let self = this;
-            var getValue = DOMSelectionAndInput.value.val();
-            DOMSelectionAndInput.totalTitle.addClass('full-opacity');
-            console.log(getValue);
-        }
+        // valueProcessing: function(){
+            // let self = this;
+            // var getValue = DOMSelectionAndInput.value.val();
+            // DOMSelectionAndInput.totalTitle.addClass('full-opacity');
+            // console.log(getValue);
+        // }
     };
 
-    DOMSelectionAndInput.displayMonth();
+    // PageSetup.displayMonth();
     DOMSelectionAndInput.inputEventsHandling();
-    mathOperationsObject.addValueEvent();
+    // mathOperationsObject.addValueEvent();
    
 
 
