@@ -19,7 +19,7 @@ $(document).ready(function(){
     let incomeValue = 0;
     let expensesValue = 0;
     let getValue;
-    let detectMathSign = '+';
+    // let detectMathSign = '+';
     let totalSum = 0;  
     let financePercentage;
     const expensePercentage = $('.percentage-expense-header');
@@ -55,63 +55,7 @@ $(document).ready(function(){
         expensePercentage: $('.percentage-expense-header'),
         description: $('.description'),
         appTitle: $('#app_title'), 
-        addValue: $('.add-value'),
-        inputEventsHandling : function(){
-            
-            let self = this;
-            
-            //handle the keypresses and error message display when pressing 'up' 'down' and 'minus' sign
-            this.value.keydown(function(e) {
-                //hide the message when typing other numbers
-                if (self.errorMessage.css('display') !== 'none') {
-                    self.errorMessage.toggle();
-                }
-                //display the message when pressing "up", "down" arrows or "-" and "+" symbols
-                if (e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 189 || e.keyCode === 43) {
-                    self.errorMessage.html('<h3>No arrows, <strong>"-"</strong> or <strong>"+"</strong> symbols allowed</h3>');
-                    self.errorMessage.toggle();
-                    return false;
-                }
-                
-                //disable the only key (E) that could be visible inside the number field
-                if(e.keyCode === 69) {
-                    return false;
-                }
-            });
-            
-            self.description.keydown(function(e) {
-                if (self.errorMessage.css('display') !== 'none') {
-                    self.errorMessage.toggle();
-                }
-            });
-            
-            //handle the keypress for the 'shift' and 'plus' sign
-            self.value.keypress(function(e) {
-                if (e.keyCode === 43) {
-                    self.errorMessage.toggle();
-                    return false;
-                }
-            });
-            
-            //detect select change for the addition or subtraction and set a value for the 'detectMathSign' variable
-            self.option.change(function() {
-                if ($(this).val() === '-') {
-                    detectMathSign = '-';   
-                    console.log(detectMathSign);                 
-                } 
-                else {
-                    detectMathSign = '+';
-                    console.log(detectMathSign);
-                }
-            });
-            
-            $(window).keypress(function(e){
-                if(e.keyCode === 13){
-                    self.description.focus();
-                    valueProcessing();
-                }
-            });
-        }        
+        addValue: $('.add-value'),      
     };
     
     //make the properties of an object readOnly
@@ -127,102 +71,119 @@ $(document).ready(function(){
                     });
                 }
             };
+            // this.detectMathSign = '';
         }
         displayMonth() {
             let monthNumber = new Date().getMonth();
             let currentMonth = DOMSelectionAndInput.monthNames[monthNumber];            
             DOMSelectionAndInput.appTitle.append(currentMonth);
             DOMSelectionAndInput.description.focus();
-        }
+        } 
     };
     
     const setupPage = new PageSetup(DOMSelectionAndInput);
     setupPage[privateMethod1]();
     setupPage.displayMonth();
+    // setupPage.inputEventsHandling();
+    // console.log(setupPage.inputEventsHandling());
 
     //this class wil only get methods on the prototype ; this is the parent class
     class OperationsClass {
-        constructor(entryType){
-            this.getValue = DOMSelectionAndInput.value.val();
-            this.getDescription = DOMSelectionAndInput.description.val();
-            this.detectMathSign = '+';
+        constructor(){
+            // entryType to be added as parameter
+            this.mathSign = '+';
         }
 
-        valueProcessing(){
-            DOMSelectionAndInput.totalTitle.addClass('full-opacity');
+        signListHandling() {
+            
+            let self = this;
+            //handle the keypresses and error message display when pressing 'up' 'down' and 'minus' sign
+            DOMSelectionAndInput.value.keydown(function(e) {
+                //hide the message when typing other numbers
+                if (DOMSelectionAndInput.errorMessage.css('display') !== 'none') {
+                    DOMSelectionAndInput.errorMessage.toggle();
+                }
+                //display the message when pressing "up", "down" arrows or "-" and "+" symbols
+                if (e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 189 || e.keyCode === 43) {
+                    DOMSelectionAndInput.errorMessage.html('<h3>No arrows, <strong>"-"</strong> or <strong>"+"</strong> symbols allowed</h3>');
+                    DOMSelectionAndInput.errorMessage.toggle();
+                    return false;
+                }
+                
+                //disable the only key (E) that could be visible inside the number field
+                if(e.keyCode === 69) {
+                    return false;
+                }
+            });
+            
+            DOMSelectionAndInput.description.keydown(function(e) {
+                if (DOMSelectionAndInput.errorMessage.css('display') !== 'none') {
+                    DOMSelectionAndInput.errorMessage.toggle();
+                }
+            });
+            
+            //handle the keypress for the 'shift' and 'plus' sign
+            DOMSelectionAndInput.value.keypress(function(e) {
+                if (e.keyCode === 43) {
+                    DOMSelectionAndInput.errorMessage.toggle();
+                    return false;
+                }
+            });
+            
+            //detect select change for the addition or subtraction and set a value for the 'detectMathSign' variable
+            DOMSelectionAndInput.option.change(function() {
+                if ($(this).val() === '-') {
+                    self.mathSign = '-';
+                } 
+                else {
+                    self.mathSign = '+';
+                }
+            });
+        } 
 
+        valueProcessing() {
+
+            let self = this;
+            let getValue;
+            let getDescription;
+        
+            DOMSelectionAndInput.addValue.click(function(){
+                getValue = DOMSelectionAndInput.value.val();
+                getDescription = DOMSelectionAndInput.description.val();
+                console.log(self.mathSign);
+                console.log(getValue);
+                console.log(getDescription);
+
+                if (getValue == '' || getDescription == '') {
+                    DOMSelectionAndInput.errorMessage.html('<h3>Please type in a value and a description</h3>');
+                    DOMSelectionAndInput.errorMessage.toggle();
+        
+                    //focus on the field that needs to be completed if left empty
+                    if (DOMSelectionAndInput.description.val() == '') {
+                        DOMSelectionAndInput.description.focus();
+                    } else if (DOMSelectionAndInput.value.val() == '') {
+                        DOMSelectionAndInput.value.focus();
+                    }
+                    return;
+                }
+
+                self.getValue = parseInt(self.getValue);
+                
+                //handle the income sum
+                    if (self.mathSign === '+') {
+                        console.log('it\'s a plus');
+                    }
+            });
+         
             //display an error if the description and value field are left empty
-        if (this.getValue == '' || this.getDescription == '') {
-            DOMSelectionAndInput.errorMessage.html('<h3>Please type in a value and a description</h3>');
-            DOMSelectionAndInput.errorMessage.toggle();
 
-            //focus on the field that needs to be completed if left empty
-            if (DOMSelectionAndInput.description.val() == '') {
-                DOMSelectionAndInput.description.focus();
-            } else if (DOMSelectionAndInput.value.val() == '') {
-                DOMSelectionAndInput.value.focus();
-            }
-            return;
-        }
-        this.getValue = parseInt(this.getValue);
-
-        //handle the income sum
-        if (this.detectMathSign === '+') {
-            console.log('here');
-            // incomeValue += getValue;
-            // totalSum += getValue;
-            // totalBudget.html('');
-            // totalIncome.html('');
-            // totalBudget.prepend('<span class="total-sum">' + totalSum + '<span>');
-            // totalIncome.prepend('+ '+ incomeValue);
-
-            // //insert the html for the section in the column
-            // incomeColumn.after('<div class="section-wrapper-1"><div class="income-field"><div class="income-description">' + getDescription + '</div><div class="income-value-wrapper clearfix"><div class="income-value"><span class="plus-sign"></span><span>+ ' + getValue + '</span></div><div class="percentage-income">10%</div><i class="fa fa-times-circle-o circle-blue" aria-hidden="true"></i></div></div><hr></div>');
-
-
-            // //reveal the section smoothly
-            // setTimeout(function(){
-            //     $('.section-wrapper-1').addClass('full-opacity');
-            // },100)
-
-
-            // //remove the income section when clicking on its corresponding "X" button and update the values from the header field and the total budget number
-            // $('.circle-blue').click(function(){
-
-            //     if(addedElementTrigger) {
-            //         return;
-            //     } else {
-
-            //         addedElementTrigger = true;
-
-            //         sectionRemovalUpdates('income', $(this));
-
-            //         //remove the income section
-            //         removeSectionWrapper($(this), '.section-wrapper-1');
-
-            //     };
-
-            //     //set a Timeout to change the trigger's value.
-            //     //This is used to stop the function from running multiple times
-            //     //a forEach, a regular loop or a function factory method will not work due to the dynamic html element insertion
-            //     setTimeout(function(){
-            //         addedElementTrigger = false;
-            //     },100)
-
-            //     updateMainPercentage();
-            // });
-
-            // updateMainPercentage();
-
-            // applyPadding($('.section-wrapper-1'),$('.income-value span'), 'padding-class');
-
-            // displayPercentageIncome();
-        }
         }
     }
-
-    // const operations = new OperationsClass();
-    // operations.displayMonth();
+    
+    const operations = new OperationsClass();
+    operations.signListHandling();
+    operations.valueProcessing();
+    
 
     class IncomeObject extends OperationsClass {
    
@@ -232,33 +193,31 @@ $(document).ready(function(){
 
     }
 
-    const mathOperationsObject = {
-        getValue: DOMSelectionAndInput.value.val(),
-        totalSum : 0,
-        financePercentage: '',
-        getDescription: '',
-        detectMathSign: '+',        
-        individualPercentageContainer: '',
-        individualPercentageType: '',
-        bindEvents: function(){
-            // DOMSelectionAndInput.addValue.click(this.valueProcessing);
-        },
-        // valueProcessing: function(){
-            // let self = this;
-            // var getValue = DOMSelectionAndInput.value.val();
-            // DOMSelectionAndInput.totalTitle.addClass('full-opacity');
-            // console.log(getValue);
-        // }
-    };
+    // const mathOperationsObject = {
+    //     // getValue: DOMSelectionAndInput.value.val(),
+    //     // totalSum : 0,
+    //     // financePercentage: '',
+    //     // getDescription: '',
+    //     // // detectMathSign: '+',        
+    //     // individualPercentageContainer: '',
+    //     // individualPercentageType: '',
+    //     // bindEvents: function(){
+    //     //     // DOMSelectionAndInput.addValue.click(this.valueProcessing);
+    //     // },
+    //     // valueProcessing: function(){
+    //         // let self = this;
+    //         // var getValue = DOMSelectionAndInput.value.val();
+    //         // DOMSelectionAndInput.totalTitle.addClass('full-opacity');
+    //         // console.log(getValue);
+    //     // }
+    // };
 
-    // PageSetup.displayMonth();
-    DOMSelectionAndInput.inputEventsHandling();
-    // mathOperationsObject.addValueEvent();
-   
 
+    // -----------------------------------------------------------------
+    // Procedural method
 
 //register the values and start segmenting after a click or after a carriage return (Enter)
-    addValue.click(valueProcessing);
+    // addValue.click(valueProcessing);
 
     function valueProcessing() {
 
@@ -476,13 +435,11 @@ $(document).ready(function(){
             individualValueType = $(this).find('.income-value');
 
             individualValueType = individualValueType.text().toString().split(' ')[1];
-            // console.log(individualValueType);
 
             individualPercentageContainer = $(this).find('.percentage-income');
             individualPercentageContainer.toggleClass('full-opacity');
 
             individualPercentageType = (individualValueType/incomeValue * 100).toFixed(2);
-            // expensePercentageReference = individualExpensePercentage;
 
             //hide the percentage if this is bigger than 100
             if(individualPercentageType > 100){
@@ -502,18 +459,14 @@ $(document).ready(function(){
         $('.section-wrapper-2').eq(0).hover(function(){
 
 
-            console.log(1);
-
             individualValueType = $(this).find('.expenses-value');
 
-            console.log(individualValueType);
             individualValueType = individualValueType.text().toString().split(' ')[1];
 
             individualPercentageContainer = $(this).find('.percentage-expense');
             individualPercentageContainer.toggleClass('full-opacity');
 
             individualPercentageType = (individualValueType/expensesValue * 100).toFixed(2);
-            // expensePercentageReference = individualExpensePercentage;
 
             //hide the percentage if this is bigger than 100
             if(individualPercentageType > 100){
