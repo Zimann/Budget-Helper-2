@@ -6,7 +6,7 @@ $(document).ready(function(){
     // const date = new Date();   
     // const monthNumber = date.getMonth();
     // const currentMonth = monthNames[monthNumber];
-    const errorMessage = $('.error-message');
+    // const errorMessage = $('.error-message');
     const option = $('.option');
     const totalBudget = $('#total_budget');
     const value = $('.value');
@@ -72,7 +72,6 @@ $(document).ready(function(){
                     });
                 }
             };
-            // this.detectMathSign = '';
         }
         displayMonth() {
             let monthNumber = new Date().getMonth();
@@ -85,15 +84,18 @@ $(document).ready(function(){
     const setupPage = new PageSetup(DOMSelectionAndInput);
     setupPage[privateMethod1]();
     setupPage.displayMonth();
-    // setupPage.inputEventsHandling();
-    // console.log(setupPage.inputEventsHandling());
 
     //this class wil only get methods on the prototype ; this is the parent class
     class OperationsClass {
         constructor(){
-            // entryType to be added as parameter
+
+            // 'entryType' to be added as parameter
             this.mathSign = '+';
             this.incomeValue = 0;
+            this.addedElementTrigger = false;
+            this.addedElementTriggerExpense = false;
+            this.fieldIncomeValue = 0;
+            this.fieldExpenseValue = 0;
         }
 
         signListHandling() {
@@ -151,8 +153,6 @@ $(document).ready(function(){
 
         displayPercentageIncome() {
 
-            console.log('here');
-            
             let self = this;
             let individualValueType;
             let individualPercentageContainer;
@@ -160,8 +160,6 @@ $(document).ready(function(){
             $('.section-wrapper-1').eq(0).hover(function(){
     
                 individualValueType = $(this).find('.income-value');
-                            
-                // this.individualValueType = this.individualValueType.text().toString().split(' ')[1];
                 individualValueType = Number(individualValueType.text());
                 // console.log(individualValueType);
                 
@@ -172,7 +170,7 @@ $(document).ready(function(){
     
                 individualPercentageType = (individualValueType/self.incomeValue * 100).toFixed(2);
 
-                console.log(self.incomeValue);
+                // console.log(self.incomeValue);
                 // console.log(individualValueType/self.incomeValue);
     
                 //hide the percentage if this is bigger than 100
@@ -185,20 +183,21 @@ $(document).ready(function(){
                 individualPercentageContainer.html(individualPercentageType);
 
             });
+        } 
+
+        removeSectionWrapper(referenceElement, wrapperSection) {
+            referenceElement.closest(wrapperSection).remove();
         }
+
 
         valueProcessing() {
 
             let self = this;
             let getValue;
             let getDescription;
-            // let incomeValue = 0;
             let expensesValue = 0;
             let totalSum = 0;
 
-
-            
-    
             //event binding for the blue tick button
             DOMSelectionAndInput.addValue.click(function(){
 
@@ -224,9 +223,9 @@ $(document).ready(function(){
                     
                     //handle the income sum
                         if (self.mathSign === '+') {
-                            console.log('it\'s a plus');
-                            console.log(getValue);
-                            console.log(getDescription);
+                            // console.log('it\'s a plus');
+                            // console.log(getValue);
+                            // console.log(getDescription);
 
                             self.incomeValue += Number(getValue);
                             totalSum += Number(getValue);
@@ -258,6 +257,33 @@ $(document).ready(function(){
                             setTimeout(function(){
                                 $('.section-wrapper-1').addClass('full-opacity');
                             },100)
+
+                            //remove the income section when clicking on its corresponding "X" button and update the values from the header field and the total budget number
+                            
+                            $('.circle-blue').click(function(){
+                                // alert('here');
+                                
+                                if(self.addedElementTrigger) {
+                                    return;
+                                } else {
+                                    
+                                    self.addedElementTrigger = true;
+                                    
+                                    // sectionRemovalUpdates('income', $(this));
+                                    
+                                    //remove the income section
+                                    self.removeSectionWrapper($(this), '.section-wrapper-1');
+                
+                                };
+                
+                                //set a Timeout to change the trigger's value.
+                                //This is used to stop the function from running multiple times
+                                //a forEach, a regular loop or a function factory method will not work due to the dynamic html element insertion
+                                setTimeout(function(){
+                                    self.addedElementTrigger = false;
+                                },100)
+                                // updateMainPercentage();
+                            });
 
                         } 
 
@@ -335,10 +361,10 @@ $(document).ready(function(){
 
                     addedElementTrigger = true;
 
-                    sectionRemovalUpdates('income', $(this));
+                    // sectionRemovalUpdates('income', $(this));
 
                     //remove the income section
-                    removeSectionWrapper($(this), '.section-wrapper-1');
+                    // removeSectionWrapper($(this), '.section-wrapper-1');
 
                 };
 
