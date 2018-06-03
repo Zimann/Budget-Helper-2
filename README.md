@@ -16,3 +16,5 @@
 - CSS3
 - Grunt 
 - jQuery
+- ES6 JavaScript
+- Webpack
