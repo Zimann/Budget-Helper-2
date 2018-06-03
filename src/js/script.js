@@ -48,6 +48,7 @@ $(document).ready(function(){
         option: $('.option'),
         totalBudget: $('#total_budget'),
         totalExpense: $('.expenses-header-value'),
+        totalIncome: $('.income-header-value'),
         incomeColumn: $('.income-col hr'),
         value: $('.value'),
         expenseColumn: $('.expense-col hr'),
@@ -92,6 +93,7 @@ $(document).ready(function(){
         constructor(){
             // entryType to be added as parameter
             this.mathSign = '+';
+            this.incomeValue = 0;
         }
 
         signListHandling() {
@@ -140,22 +142,73 @@ $(document).ready(function(){
                 }
             });
         } 
+        //trigger a small padding increase when hovering over a section
+         applyPadding(paddedElement, correspondingValue, className) {
+            paddedElement.eq(0).hover(function(){
+            $(this).find(correspondingValue).toggleClass(className);
+        });
+    }
+
+        displayPercentageIncome() {
+
+            console.log('here');
+            
+            let self = this;
+            let individualValueType;
+            let individualPercentageContainer;
+            let individualPercentageType;
+            $('.section-wrapper-1').eq(0).hover(function(){
+    
+                individualValueType = $(this).find('.income-value');
+                            
+                // this.individualValueType = this.individualValueType.text().toString().split(' ')[1];
+                individualValueType = Number(individualValueType.text());
+                // console.log(individualValueType);
+                
+                // console.log(Number(individualValueType.text()));
+
+                individualPercentageContainer = $(this).find('.percentage-income');
+                individualPercentageContainer.toggleClass('full-opacity');
+    
+                individualPercentageType = (individualValueType/self.incomeValue * 100).toFixed(2);
+
+                console.log(self.incomeValue);
+                // console.log(individualValueType/self.incomeValue);
+    
+                //hide the percentage if this is bigger than 100
+                if(individualPercentageType > 100){
+                    individualPercentageContainer.toggleClass('full-opacity');
+                } else {
+                    individualPercentageType += '%';
+                }
+    
+                individualPercentageContainer.html(individualPercentageType);
+
+            });
+        }
 
         valueProcessing() {
 
             let self = this;
             let getValue;
             let getDescription;
-        
+            // let incomeValue = 0;
+            let expensesValue = 0;
+            let totalSum = 0;
+
+
+            
+    
+            //event binding for the blue tick button
             DOMSelectionAndInput.addValue.click(function(){
+
                 getValue = DOMSelectionAndInput.value.val();
                 getDescription = DOMSelectionAndInput.description.val();
-                console.log(self.mathSign);
-                console.log(getValue);
-                console.log(getDescription);
+                DOMSelectionAndInput.totalTitle.addClass('full-opacity');
 
+                //show an error message if one of the input fields is empty
                 if (getValue == '' || getDescription == '') {
-                    DOMSelectionAndInput.errorMessage.html('<h3>Please type in a value and a description</h3>');
+                    DOMSelectionAndInput.errorMessage.html(`<h3>Please type in a value and a description</h3>`);
                     DOMSelectionAndInput.errorMessage.toggle();
         
                     //focus on the field that needs to be completed if left empty
@@ -165,54 +218,69 @@ $(document).ready(function(){
                         DOMSelectionAndInput.value.focus();
                     }
                     return;
+                } else {
+
+                    self.getValue = parseInt(self.getValue);
+                    
+                    //handle the income sum
+                        if (self.mathSign === '+') {
+                            console.log('it\'s a plus');
+                            console.log(getValue);
+                            console.log(getDescription);
+
+                            self.incomeValue += Number(getValue);
+                            totalSum += Number(getValue);
+
+                            DOMSelectionAndInput.totalBudget.html('');
+                            DOMSelectionAndInput.totalIncome.html('');
+                            DOMSelectionAndInput.totalBudget.prepend(`<span class="total-sum">${totalSum}<span>`);
+                            DOMSelectionAndInput.totalIncome.prepend(`+ ${self.incomeValue}`);
+
+                            //insert the html for the section in the column
+                           DOMSelectionAndInput.incomeColumn.after(`
+                            <div class="section-wrapper-1">
+                                <div class="income-field">
+                                    <div class="income-description"> ${getDescription}</div>
+                                    <div class="income-value-wrapper clearfix">
+                                        <div class="income-value">
+                                            <span class="plus-sign"></span>
+                                            <span>${getValue}</span>
+                                        </div>
+                                    <div class="percentage-income">
+                                        10%
+                                    </div>
+                                    <i class="fa fa-times-circle-o circle-blue" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            <hr>
+                            </div>`);
+
+                            setTimeout(function(){
+                                $('.section-wrapper-1').addClass('full-opacity');
+                            },100)
+
+                        } 
+
+                    //empty the two fields after submitting the value
+                    DOMSelectionAndInput.value.val(' ');
+                    DOMSelectionAndInput.description.val(' ');
+
+                    self.displayPercentageIncome();
+                    self.applyPadding($('.section-wrapper-1'),$('.income-value span'), 'padding-class');
+
                 }
 
-                self.getValue = parseInt(self.getValue);
-                
-                //handle the income sum
-                    if (self.mathSign === '+') {
-                        console.log('it\'s a plus');
-                    }
             });
-         
-            //display an error if the description and value field are left empty
 
         }
+
+         
     }
     
     const operations = new OperationsClass();
     operations.signListHandling();
     operations.valueProcessing();
     
-
-    class IncomeObject extends OperationsClass {
-   
-    }
-
-    class ExpenseObject extends OperationsClass {
-
-    }
-
-    // const mathOperationsObject = {
-    //     // getValue: DOMSelectionAndInput.value.val(),
-    //     // totalSum : 0,
-    //     // financePercentage: '',
-    //     // getDescription: '',
-    //     // // detectMathSign: '+',        
-    //     // individualPercentageContainer: '',
-    //     // individualPercentageType: '',
-    //     // bindEvents: function(){
-    //     //     // DOMSelectionAndInput.addValue.click(this.valueProcessing);
-    //     // },
-    //     // valueProcessing: function(){
-    //         // let self = this;
-    //         // var getValue = DOMSelectionAndInput.value.val();
-    //         // DOMSelectionAndInput.totalTitle.addClass('full-opacity');
-    //         // console.log(getValue);
-    //     // }
-    // };
-
-
     // -----------------------------------------------------------------
     // Procedural method
 
@@ -428,29 +496,29 @@ $(document).ready(function(){
         }
     }
 
-    function displayPercentageIncome(){
-        $('.section-wrapper-1').eq(0).hover(function(){
+    // function displayPercentageIncome(){
+    //     $('.section-wrapper-1').eq(0).hover(function(){
 
 
-            individualValueType = $(this).find('.income-value');
+    //         individualValueType = $(this).find('.income-value');
 
-            individualValueType = individualValueType.text().toString().split(' ')[1];
+    //         individualValueType = individualValueType.text().toString().split(' ')[1];
 
-            individualPercentageContainer = $(this).find('.percentage-income');
-            individualPercentageContainer.toggleClass('full-opacity');
+    //         individualPercentageContainer = $(this).find('.percentage-income');
+    //         individualPercentageContainer.toggleClass('full-opacity');
 
-            individualPercentageType = (individualValueType/incomeValue * 100).toFixed(2);
+    //         individualPercentageType = (individualValueType/incomeValue * 100).toFixed(2);
 
-            //hide the percentage if this is bigger than 100
-            if(individualPercentageType > 100){
-                individualPercentageContainer.toggleClass('full-opacity');
-            } else {
-                individualPercentageType += '%';
-            }
+    //         //hide the percentage if this is bigger than 100
+    //         if(individualPercentageType > 100){
+    //             individualPercentageContainer.toggleClass('full-opacity');
+    //         } else {
+    //             individualPercentageType += '%';
+    //         }
 
-            individualPercentageContainer.html(individualPercentageType)
-        });
-    }
+    //         individualPercentageContainer.html(individualPercentageType)
+    //     });
+    // }
 
 
     function displayPercentageExpense(){
