@@ -96,6 +96,7 @@ $(document).ready(function(){
             this.addedElementTriggerExpense = false;
             this.fieldIncomeValue = 0;
             this.fieldExpenseValue = 0;
+            this.totalSum = 0;
         }
 
         signListHandling() {
@@ -189,6 +190,53 @@ $(document).ready(function(){
             referenceElement.closest(wrapperSection).remove();
         }
 
+        sectionRemovalUpdates(valueType, referenceElement){
+
+            let self = this;
+
+            if(valueType === 'income'){
+    
+                //get the actual primitive value type, the number in the section
+                self.fieldIncomeValue = Number(referenceElement.parent().find('span')[1].innerText);
+                //subtract the section specific value from the total stored income value
+                this.incomeValue -= this.fieldIncomeValue;
+    
+                if(this.incomeValue === 0) {
+                    DOMSelectionAndInput.totalIncome.html(this.incomeValue);
+                } else {
+                    DOMSelectionAndInput.totalIncome.html(`+${this.incomeValue}`);
+                }
+    
+                //subtract the section value from the "total" value
+                this.totalSum -= this.fieldIncomeValue;
+                // console.log(this.totalSum);
+                console.log(this.totalSum);
+                DOMSelectionAndInput.totalBudget.html(this.totalSum);
+                
+                // if(expensePercentageReference > 0) {
+                //     expensePercentage.addClass('full-opacity');
+                // }
+    
+            } 
+            // else if(valueType ==='expense') {
+    
+            //     //get the actual primitive value type, the number in the section
+            //     fieldExpenseValue = parseInt(referenceElement.parent().find('span')[1].innerText.split(' ')[1]);
+    
+            //     //subtract the section value from the total expense value
+            //     expensesValue -= fieldExpenseValue;
+    
+            //     if(expensesValue === 0) {
+            //         totalExpense.html(expensesValue);
+            //     } else {
+            //         totalExpense.html('+ ' + expensesValue);
+            //     }
+            //     //add the section value to the "total"
+            //     totalSum += fieldExpenseValue;
+            //     totalBudget.html(totalSum);
+            // }
+        }
+
 
         valueProcessing() {
 
@@ -196,7 +244,7 @@ $(document).ready(function(){
             let getValue;
             let getDescription;
             let expensesValue = 0;
-            let totalSum = 0;
+            // let totalSum = 0;
 
             //event binding for the blue tick button
             DOMSelectionAndInput.addValue.click(function(){
@@ -223,16 +271,14 @@ $(document).ready(function(){
                     
                     //handle the income sum
                         if (self.mathSign === '+') {
-                            // console.log('it\'s a plus');
-                            // console.log(getValue);
-                            // console.log(getDescription);
-
+                           
                             self.incomeValue += Number(getValue);
-                            totalSum += Number(getValue);
+                            self.totalSum += Number(getValue);
+                            // console.log(self.totalSum);
 
                             DOMSelectionAndInput.totalBudget.html('');
                             DOMSelectionAndInput.totalIncome.html('');
-                            DOMSelectionAndInput.totalBudget.prepend(`<span class="total-sum">${totalSum}<span>`);
+                            DOMSelectionAndInput.totalBudget.prepend(`<span class="total-sum">${self.totalSum}<span>`);
                             DOMSelectionAndInput.totalIncome.prepend(`+ ${self.incomeValue}`);
 
                             //insert the html for the section in the column
@@ -269,7 +315,7 @@ $(document).ready(function(){
                                     
                                     self.addedElementTrigger = true;
                                     
-                                    // sectionRemovalUpdates('income', $(this));
+                                    self.sectionRemovalUpdates('income', $(this));
                                     
                                     //remove the income section
                                     self.removeSectionWrapper($(this), '.section-wrapper-1');
