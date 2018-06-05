@@ -8,13 +8,13 @@ $(document).ready(function(){
     // const currentMonth = monthNames[monthNumber];
     // const errorMessage = $('.error-message');
     const option = $('.option');
-    const totalBudget = $('#total_budget');
+    // const totalBudget = $('#total_budget');
     const value = $('.value');
     const addValue = $('.add-value');
     const totalIncome = $('.income-header-value');
-    const totalExpense = $('.expenses-header-value');
+    // const totalExpense = $('.expenses-header-value');
     const incomeColumn = $('.income-col hr');
-    const expenseColumn = $('.expense-col hr');
+    // const expenseColumn = $('.expense-col hr');
     const totalTitle = $('.total-title');
     let incomeValue = 0;
     let expensesValue = 0;
@@ -23,7 +23,7 @@ $(document).ready(function(){
     let totalSum = 0;  
     let financePercentage;
     const expensePercentage = $('.percentage-expense-header');
-    let expensePercentageReference;
+    // let expensePercentageReference;
     const description = $('.description');
     const appTitle = $('#app_title');
     let fieldIncomeValue;
@@ -31,7 +31,7 @@ $(document).ready(function(){
     let addedElementTrigger = false;
     let addedElementTriggerExpense = false;
     let getDescription;
-    let expenseHtmlField;
+    // let expenseHtmlField;
     let individualExpenseValue;
     let individualExpensePercentage;
     let individualPercentageContainer;
@@ -92,6 +92,7 @@ $(document).ready(function(){
             // 'entryType' to be added as parameter
             this.mathSign = '+';
             this.incomeValue = 0;
+            this.expensesValue = 0;
             this.addedElementTrigger = false;
             this.addedElementTriggerExpense = false;
             this.fieldIncomeValue = 0;
@@ -186,6 +187,17 @@ $(document).ready(function(){
             });
         } 
 
+        updateMainPercentage () {
+            if (this.incomeValue > this.expensesValue) {
+                this.financePercentage = ((this.expensesValue / this.incomeValue) * 100).toFixed(2);
+                DOMSelectionAndInput.expensePercentage.html(this.financePercentage + ' %');
+                DOMSelectionAndInput.expensePercentage.addClass('full-opacity');
+            } else {
+                DOMSelectionAndInput.expensePercentage.removeClass('full-opacity');
+            }
+            
+        }
+
         removeSectionWrapper(referenceElement, wrapperSection) {
             referenceElement.closest(wrapperSection).remove();
         }
@@ -209,8 +221,6 @@ $(document).ready(function(){
     
                 //subtract the section value from the "total" value
                 this.totalSum -= this.fieldIncomeValue;
-                // console.log(this.totalSum);
-                console.log(this.totalSum);
                 DOMSelectionAndInput.totalBudget.html(this.totalSum);
                 
                 // if(expensePercentageReference > 0) {
@@ -218,23 +228,23 @@ $(document).ready(function(){
                 // }
     
             } 
-            // else if(valueType ==='expense') {
+            else if(valueType ==='expense') {
     
-            //     //get the actual primitive value type, the number in the section
-            //     fieldExpenseValue = parseInt(referenceElement.parent().find('span')[1].innerText.split(' ')[1]);
+                //get the actual primitive value type, the number in the section
+                self.fieldExpenseValue = Number(referenceElement.parent().find('span')[1].innerText);
     
-            //     //subtract the section value from the total expense value
-            //     expensesValue -= fieldExpenseValue;
+                //subtract the section value from the total expense value
+                this.expensesValue -= this.fieldExpenseValue;
     
-            //     if(expensesValue === 0) {
-            //         totalExpense.html(expensesValue);
-            //     } else {
-            //         totalExpense.html('+ ' + expensesValue);
-            //     }
-            //     //add the section value to the "total"
-            //     totalSum += fieldExpenseValue;
-            //     totalBudget.html(totalSum);
-            // }
+                if(this.expensesValue === 0) {
+                    DOMSelectionAndInput.totalExpense.html(this.expensesValue);
+                } else {
+                    DOMSelectionAndInput.totalExpense.html(`+ ${this.expensesValue}`);
+                }
+                //add the section value to the "total"
+                this.totalSum += this.fieldExpenseValue;
+                DOMSelectionAndInput.totalBudget.html(this.totalSum);
+            }
         }
 
 
@@ -244,7 +254,8 @@ $(document).ready(function(){
             let getValue;
             let getDescription;
             let expensesValue = 0;
-            // let totalSum = 0;
+            let financePercentage;
+            let expenseHtmlField;
 
             //event binding for the blue tick button
             DOMSelectionAndInput.addValue.click(function(){
@@ -274,7 +285,6 @@ $(document).ready(function(){
                            
                             self.incomeValue += Number(getValue);
                             self.totalSum += Number(getValue);
-                            // console.log(self.totalSum);
 
                             DOMSelectionAndInput.totalBudget.html('');
                             DOMSelectionAndInput.totalIncome.html('');
@@ -307,7 +317,6 @@ $(document).ready(function(){
                             //remove the income section when clicking on its corresponding "X" button and update the values from the header field and the total budget number
                             
                             $('.circle-blue').click(function(){
-                                // alert('here');
                                 
                                 if(self.addedElementTrigger) {
                                     return;
@@ -328,18 +337,67 @@ $(document).ready(function(){
                                 setTimeout(function(){
                                     self.addedElementTrigger = false;
                                 },100)
-                                // updateMainPercentage();
+                                
+                                self.updateMainPercentage();
                             });
+                            
+                            self.updateMainPercentage();
+                            
+                            self.applyPadding($('.section-wrapper-1'),$('.income-value span'), 'padding-class');
+                            self.displayPercentageIncome();
+                            //handle the expense
+                        }  else {
+                            self.expensesValue += Number(getValue);
+                            self.totalSum -= Number(getValue);                            
+                            
+                            self.expenseHtmlField = `
+                            <div class="section-wrapper-2">
+                            <div class="expenses-field">
+                            <div class="expenses-description">${getDescription}</div>
+                            <div class="expense-value-wrapper">
+                            <div class="expenses-value">
+                            <span class="minus-sign"></span><span>-${getValue}</span>
+                            </div>
+                            <div class="percentage-expense"></div>
+                            <i class="fa fa-times-circle-o circle-orange" aria-hidden="true"></i>
+                            </div>
+                            </div>
+                            <hr>
+                            </div>`;
+                            //update the top percentage on the hero(jumbotron top section)
+                            self.financePercentage = ((self.expensesValue / self.incomeValue) * 100).toFixed(2);
+                            DOMSelectionAndInput.totalExpense.html('');
+                            DOMSelectionAndInput.totalExpense.html('- ' + self.expensesValue);
+                            DOMSelectionAndInput.totalBudget.html('');
+                            // totalSum -= getValue;
+                            DOMSelectionAndInput.expenseColumn.after(self.expenseHtmlField);
+                
+                            setTimeout(function(){
+                                $('.section-wrapper-2').addClass('full-opacity');
+                            },100)
+                            
+                            self.updateMainPercentage();
+                            
+                            self.applyPadding($('.section-wrapper-2'),$('.expenses-value'), 'padding-class');
+                            self.displayPercentageIncome();
 
-                        } 
+                            // self.displayPercentageIncome();
+
+
+                             //conditions for percentage reveal
+                            if (self.totalSum > 0) {
+                                DOMSelectionAndInput.totalBudget.prepend(`+${self.totalSum}`);
+                                DOMSelectionAndInput.expensePercentage.addClass('full-opacity');
+                                DOMSelectionAndInput.expensePercentage.html(`${self.financePercentage} %`);
+
+                            } else if (self.totalSum < 0) {
+                                DOMSelectionAndInput.totalBudget.prepend(self.totalSum);
+                            }
+                        }
 
                     //empty the two fields after submitting the value
                     DOMSelectionAndInput.value.val(' ');
                     DOMSelectionAndInput.description.val(' ');
-
-                    self.displayPercentageIncome();
-                    self.applyPadding($('.section-wrapper-1'),$('.income-value span'), 'padding-class');
-
                 }
 
             });
@@ -509,7 +567,6 @@ $(document).ready(function(){
     function applyPadding(paddedElement, correspondingValue, className) {
         paddedElement.eq(0).hover(function(){
             $(this).find(correspondingValue).toggleClass(className);
-
         });
     }
 
@@ -545,9 +602,9 @@ $(document).ready(function(){
             totalBudget.html(totalSum);
             
 
-            if(expensePercentageReference > 0) {
-                expensePercentage.addClass('full-opacity');
-            }
+            // if(expensePercentageReference > 0) {
+            //     expensePercentage.addClass('full-opacity');
+            // }
 
         } else if(valueType ==='expense') {
 
