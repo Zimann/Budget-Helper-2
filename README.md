@@ -2,9 +2,8 @@
 
 ### Purpose of this project
 
-  - This project has been coded with the classic DOM manipulation approach
-  - It has been coded the way it is, to illustrate how hard it actually becomes to keep track of changes by developing a project in this way, without making use of the known (and modern) __data-binding__ which keeps track of changes and actually performs updates on the DOM Tree.
-  - Spaghetti code was in this case, a difficult thing to avoid.
+  - This project has been been remodelled after a project that has the exact same functionalities.
+  - The former project was created in a procedural wayand every method was repositioned and restructured in an OOP manner.
   
   ### How can this project help you?
 - It can help you to have a visual representation of your expenses and incomes.
