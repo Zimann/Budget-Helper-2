@@ -2,7 +2,7 @@
 
 ### Purpose of this project
 
-  - This project has been been remodelled after a project that has the exact same functionalities.
+  - This project has been been remodelled after a project (https://github.com/Zimann/Budget-Helper) that has the exact same functionalities.
   - The former project was created in a procedural wayand every method was repositioned and restructured in an OOP manner.
   
   ### How can this project help you?
