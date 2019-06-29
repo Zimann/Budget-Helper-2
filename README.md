@@ -7,7 +7,7 @@
   
   ### How can this project help you?
 - It can help you to have a visual representation of your expenses and incomes.
-- It can show you accurate percentages between income and expense sums, as well as individual calculated percentages for each income or expense entry.
+- It can show you accurate percentages of income and expense sums, as well as individual calculated percentages for each income or expense entry.
 
 ### Technologies used
 - HTML5 
