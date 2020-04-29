@@ -32,7 +32,7 @@
     "grunt-autoprefixer": "^3.0.4",
     "grunt-contrib-cssmin": "^2.2.1",
     "grunt-npm-install": "^0.3.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "webpack-concat-plugin": "^2.4.2"
   }
 }
